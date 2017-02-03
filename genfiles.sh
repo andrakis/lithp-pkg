@@ -10,8 +10,7 @@ make RUNFLAGS=-cc
 popd
 files=`find . -name *.ast`
 content=$(cat << EOF
-// files.js, generated from genfiles.sh\n
-var files = {};
+// files.js, generated from genfiles.sh\nvar files = {};
 EOF
 )
 
