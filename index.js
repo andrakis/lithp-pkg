@@ -1,5 +1,13 @@
+if(window.global != global) {
+	window.global = window;
+	global = window;
+}
 
 var lithp = require('lithp');
+window.Lithp = lithp;
+
+var util = require('util');
+window.util = util; // expose to HTML pages
 
 var files;
 try {
@@ -12,7 +20,7 @@ try {
 global._lithp.browserify = true;
 global._lithp.fileCache = files;
 
-lithp.set_debug_flag(true);
+//lithp.set_debug_flag(true);
 //global._lithp.set_parser_debug(true);
 var instance = new lithp.Lithp();
 var code = files["modules/match.ast"];
