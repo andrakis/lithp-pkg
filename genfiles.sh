@@ -27,8 +27,8 @@ getContents () {
 	prefix=`echo $path | sed 's/^..\///g'`
 	if [ "$path"x != "x" ]; then
 		pushd $path
-		prefix+="/"
-		path+="/"
+		prefix=`echo $prefix | sed 's/^\(\.\.\/\)\+//g'`/
+		path=./`echo $path | sed 's/^\(\.\.\/\)\+//g'`/
 	fi
 	files=`find $FIND_OPTS . -name '*.ast'`
 
