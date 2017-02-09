@@ -6,6 +6,8 @@
 #
 # Additional paths can be supplied.
 
+FIND_OPTS="-L"
+
 pushd node_modules/lithp
 if [ ! -e run ]; then
 	ln -s run.js run
@@ -28,7 +30,7 @@ getContents () {
 		prefix+="/"
 		path+="/"
 	fi
-	files=`find . -name '*.ast'`
+	files=`find $FIND_OPTS . -name '*.ast'`
 
 	for file in $files; do
 		asJson=`echo $file | sed 's/\.ast$/.json/g'`
@@ -43,13 +45,13 @@ getContents () {
 	fi
 }
 
+set -x
 getContents ""
 for extra in $@; do
-	set -x
 	getContents $@
-	set +x
 done
 
+set +x
 
 content+="\nmodule.exports = files;\n"
 echo -e $content > files.js
