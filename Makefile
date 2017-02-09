@@ -20,7 +20,7 @@ files.js:
 	./genfiles.sh $(EXTRA_PATHS)
 
 lithp-pkg.js: node_modules run files.js index.js
-	browserify index.js -o lithp-pkg.js
+	node_modules/.bin/browserify index.js -o lithp-pkg.js
 
 clean:
 	rm -f lithp-pkg.js
