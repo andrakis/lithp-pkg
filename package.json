@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "browserify": "^14.0.0",
     "lithp": "git+https://github.com/andrakis/node-lithp.git"
   }
 }

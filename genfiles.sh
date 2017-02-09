@@ -21,7 +21,6 @@ EOF
 )
 
 getContents () {
-	set -x
 	path=$1
 	prefix=`echo $path | sed 's/^..\///g'`
 	if [ "$path"x != "x" ]; then
@@ -39,7 +38,6 @@ getContents () {
 		content+="\nfiles['$prefix$properAst'] = require('$path$proper');"
 	done
 
-	set +x
 	if [ "$path"x != "x" ]; then
 		popd
 	fi
@@ -47,7 +45,9 @@ getContents () {
 
 getContents ""
 for extra in $@; do
+	set -x
 	getContents $@
+	set +x
 done
 
 
