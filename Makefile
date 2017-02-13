@@ -5,6 +5,7 @@ RUNFLAGS=
 
 default: lithp-pkg.js
 all: default
+.PHONY: clean node_modules run
 
 node_modules:
 	if [ ! -e "node_modules" ]; then \
@@ -25,3 +26,4 @@ lithp-pkg.js: node_modules run files.js index.js
 clean:
 	rm -f lithp-pkg.js
 	rm -f files.js
+	$(MAKE) -C node_modules/lithp clean

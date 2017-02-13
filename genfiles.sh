@@ -8,14 +8,14 @@
 
 FIND_OPTS="-L"
 
-pushd node_modules/lithp
+pushd node_modules/lithp > /dev/null
 if [ ! -e run ]; then
 	ln -s run.js run
 fi
-make clean
+#make clean
 # Compile in compact mode
 make RUNFLAGS=-cc
-popd
+popd > /dev/null
 
 content=$(cat << EOF
 // files.js, generated from genfiles.sh\nvar files = {};
@@ -26,11 +26,12 @@ getContents () {
 	path=$1
 	prefix=`echo $path | sed 's/^..\///g'`
 	if [ "$path"x != "x" ]; then
-		pushd $path
+		pushd $path > /dev/null
 		prefix=`echo $prefix | sed 's/^\(\.\.\/\)\+//g'`/
 		path=./`echo $path | sed 's/^\(\.\.\/\)\+//g'`/
 	fi
-	files=`find $FIND_OPTS . -name '*.ast'`
+	echo "Packaging `find $FIND_OPTS . -name '*.ast' 2> /dev/null | wc -l` files in `readlink -e .`"
+	files=`find $FIND_OPTS . -name '*.ast' 2> /dev/null`
 
 	for file in $files; do
 		asJson=`echo $file | sed 's/\.ast$/.json/g'`
@@ -41,17 +42,14 @@ getContents () {
 	done
 
 	if [ "$path"x != "x" ]; then
-		popd
+		popd > /dev/null
 	fi
 }
 
-set -x
 getContents ""
 for extra in $@; do
-	getContents $@
+	getContents $extra
 done
-
-set +x
 
 content+="\nmodule.exports = files;\n"
 echo -e $content > files.js
