@@ -7,41 +7,52 @@
 # Additional paths can be supplied.
 
 FIND_OPTS="-L"
+EXT_IN=${EXT_IN:=ast}
+EXT_OUT=${EXT_OUT:=json}
+REL=${REL:=n}
+OUTFILE=${OUTFILE:=files.js}
 
 pushd node_modules/lithp > /dev/null
 if [ ! -e run ]; then
 	ln -s run.js run
 fi
-#make clean
+
 # Compile in compact mode
 make RUNFLAGS=-cc
 popd > /dev/null
 
 content=$(cat << EOF
-// files.js, generated from genfiles.sh\nvar files = {};
+// $OUTFILE, generated from genfiles.sh\nvar files = {};
 EOF
 )
 
 getContents () {
 	path=$1
 	prefix=`echo $path | sed 's/^..\///g'`
+	shouldpop=0
 	if [ "$path"x != "x" ]; then
 		pushd $path > /dev/null
+		shouldpop=1
 		prefix=`echo $prefix | sed 's/^\(\.\.\/\)\+//g'`/
 		path=./`echo $path | sed 's/^\(\.\.\/\)\+//g'`/
 	fi
-	echo "Packaging `find $FIND_OPTS . -name '*.ast' 2> /dev/null | wc -l` files in `readlink -e .`"
-	files=`find $FIND_OPTS . -name '*.ast' 2> /dev/null`
+	echo "Packaging `find $FIND_OPTS . -name "*.$EXT_IN" 2> /dev/null | wc -l` files in `readlink -e .`"
+	files=`find $FIND_OPTS . -name "*.$EXT_IN" 2> /dev/null`
 
 	for file in $files; do
-		asJson=`echo $file | sed 's/\.ast$/.json/g'`
-		cp $file $asJson
+		asJson=`echo $file | sed "s/\.$EXT_IN$/.$EXT_OUT/g"`
+		if [ "$file" != "$asJson" ]; then
+			cp $file $asJson
+		fi
 		proper=`echo $asJson | sed 's/^..node_modules.//g' | sed 's/^\.\///g'`
-		properAst=`echo $proper | sed 's/\.json$/.ast/g' | sed 's/^lithp\///g'`
+		properAst=`echo $proper | sed "s/\.EXT_OUT$/.$EXT_IN/g" | sed 's/^lithp\///g'`
+		if [ "$REL" == "y" ]; then
+			proper=./$proper
+		fi
 		content+="\nfiles['$prefix$properAst'] = require('$path$proper');"
 	done
 
-	if [ "$path"x != "x" ]; then
+	if [ "$shouldpop" -eq 1 ]; then
 		popd > /dev/null
 	fi
 }
@@ -52,5 +63,5 @@ for extra in $@; do
 done
 
 content+="\nmodule.exports = files;\n"
-echo -e $content > files.js
+echo -e $content > $OUTFILE
 

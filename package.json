@@ -1,8 +1,12 @@
 {
   "name": "lithp-pkg",
   "version": "1.2.0",
-  "description": "",
+  "description": "Package Lithp into a browserifiable file",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrakis/lithp-pkg.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
