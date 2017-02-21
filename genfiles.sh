@@ -45,7 +45,7 @@ getContents () {
 			cp $file $asJson
 		fi
 		proper=`echo $asJson | sed 's/^..node_modules.//g' | sed 's/^\.\///g'`
-		properAst=`echo $proper | sed "s/\.EXT_OUT$/.$EXT_IN/g" | sed 's/^lithp\///g'`
+		properAst=`echo $proper | sed "s/\.$EXT_OUT$/.$EXT_IN/g" | sed 's/^lithp\///g'`
 		if [ "$REL" == "y" ]; then
 			proper=./$proper
 		fi

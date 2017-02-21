@@ -1,6 +1,6 @@
 {
   "name": "lithp-pkg",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Package Lithp into a browserifiable file",
   "main": "index.js",
   "repository": {
