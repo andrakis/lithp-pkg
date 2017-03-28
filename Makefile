@@ -39,5 +39,5 @@ update: clean
 clean: node_modules
 	rm -f lithp-pkg.js
 	rm -f files.js
-	$(MAKE) -C node_modules/lithp clean
-	rm node_modules
+	$(MAKE) -C node_modules/lithp clean ||:
+	rm node_modules ||:
